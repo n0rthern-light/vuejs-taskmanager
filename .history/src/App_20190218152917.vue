@@ -2,19 +2,17 @@
   <div id="app">
     <h3>{{msg}}</h3>
     <Todos :todos="todos" v-on:del-todo="delTodo" v-on:update-array="updateArr"/>
-    <TodoAdd v-on:add-todo="addTodo"/>
   </div>
 </template>
+
 <script>
 
 import Todos from '@/components/Todos.vue';
-import TodoAdd from '@/components/TodoAdd.vue';
 
 export default {
   name: 'app',
   components: {
-    Todos,
-    TodoAdd
+    Todos
   },
   data() {
     return {
@@ -51,28 +49,9 @@ export default {
       var expires = "expires="+ d.toUTCString();
       document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
     },
-    getCookie(cname) {
-      var name = cname + "=";
-      var decodedCookie = decodeURIComponent(document.cookie);
-      var ca = decodedCookie.split(';');
-      for(var i = 0; i <ca.length; i++) {
-        var c = ca[i];
-        while (c.charAt(0) == ' ') {
-          c = c.substring(1);
-        }
-        if (c.indexOf(name) == 0) {
-          return c.substring(name.length, c.length);
-        }
-      }
-      return "";
-    },
     delTodo(id) {
       console.log('delTodo');
-      this.todos = this.todos.filter((el) => el.id !== id).sort((a, b) => a.id - b.id).
-      sort((a, b) => a.completed - b.completed);
-
-      this.setCookie('todos', JSON.stringify(this.todos), 60);
-
+      this.todos = this.todos.filter((el) => el.id !== id);
     },
     updateArr(obj) {
       console.log('updateArr');
@@ -81,22 +60,12 @@ export default {
       sort((a, b) => a.id - b.id).
       sort((a, b) => a.completed - b.completed);
 
-      this.setCookie('todos', JSON.stringify(this.todos), 60)
-    },
-    addTodo(title) {
-      console.log('adding to todos')
-      let max_id = Math.max.apply(Math, this.todos.map(el => el.id));
-      max_id = max_id >= 0 ? max_id : 0;
-      this.todos.push({id: max_id + 1, title: title, completed: false });
-
-      this.setCookie('todos', JSON.stringify(this.todos), 60)
+      setCookie('todos', JSON.stringify(this.todos), 60)
     }
 
   },
   mounted() {
     console.log('mounted');
-    this.todos = JSON.parse(this.getCookie('todos'));
-
     this.todos = this.todos.sort((a, b) => a.id - b.id).
       sort((a, b) => a.completed - b.completed);
   }

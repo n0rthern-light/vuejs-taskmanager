@@ -86,8 +86,7 @@ export default {
     addTodo(title) {
       console.log('adding to todos')
       let max_id = Math.max.apply(Math, this.todos.map(el => el.id));
-      max_id = max_id >= 0 ? max_id : 0;
-      this.todos.push({id: max_id + 1, title: title, completed: false });
+      this.todos.push({id: max_id+1, title: title, completed: false });
 
       this.setCookie('todos', JSON.stringify(this.todos), 60)
     }

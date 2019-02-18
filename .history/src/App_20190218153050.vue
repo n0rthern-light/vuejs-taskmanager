@@ -2,19 +2,17 @@
   <div id="app">
     <h3>{{msg}}</h3>
     <Todos :todos="todos" v-on:del-todo="delTodo" v-on:update-array="updateArr"/>
-    <TodoAdd v-on:add-todo="addTodo"/>
   </div>
 </template>
+
 <script>
 
 import Todos from '@/components/Todos.vue';
-import TodoAdd from '@/components/TodoAdd.vue';
 
 export default {
   name: 'app',
   components: {
-    Todos,
-    TodoAdd
+    Todos
   },
   data() {
     return {
@@ -68,11 +66,7 @@ export default {
     },
     delTodo(id) {
       console.log('delTodo');
-      this.todos = this.todos.filter((el) => el.id !== id).sort((a, b) => a.id - b.id).
-      sort((a, b) => a.completed - b.completed);
-
-      this.setCookie('todos', JSON.stringify(this.todos), 60);
-
+      this.todos = this.todos.filter((el) => el.id !== id);
     },
     updateArr(obj) {
       console.log('updateArr');
@@ -80,14 +74,6 @@ export default {
       map((el) => el.id === obj.id ? obj : el).
       sort((a, b) => a.id - b.id).
       sort((a, b) => a.completed - b.completed);
-
-      this.setCookie('todos', JSON.stringify(this.todos), 60)
-    },
-    addTodo(title) {
-      console.log('adding to todos')
-      let max_id = Math.max.apply(Math, this.todos.map(el => el.id));
-      max_id = max_id >= 0 ? max_id : 0;
-      this.todos.push({id: max_id + 1, title: title, completed: false });
 
       this.setCookie('todos', JSON.stringify(this.todos), 60)
     }
